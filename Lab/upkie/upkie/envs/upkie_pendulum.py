@@ -316,6 +316,21 @@ class UpkiePendulum(gym.Wrapper):
         _, reward, terminated, truncated, info = self.env.step(spine_action)
         spine_observation = info["spine_observation"]
         observation = self.__get_env_observation(spine_observation)
+
+        # unpack the observations
+        theta = observation[0]
+        theta_dot = observation[1]
+        p_dot = observation[3]
+
+        # override the internal reward with a basic standing reward function
+        theta_wt = 5
+        theta_dot_wt = 0.1
+        p_dot_wt = 0.1
+        reward = - theta_wt * (theta ** 2) - theta_dot_wt * (theta_dot ** 2) - p_dot_wt * (p_dot ** 2)
+
+        # override the internal time step condition
+        self.env.max_time_steps = 300
+
         if self.__detect_fall(spine_observation):
             terminated = True
         self.time_stamp += 1
