@@ -12,7 +12,8 @@ SEED = 0
 
 def main():
     env = make_vec_env(ENV_ID, n_envs=1, env_kwargs=ENV_KWARGS, seed=SEED)
-    model = PPO("MlpPolicy", env, device="auto")
+    # model = PPO("MlpPolicy", env, device="auto")
+    model = PPO("MlpPolicy", env, device="cpu")
 
     obs = env.reset()
     ep_return = 0.0
